@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace datingapp.data.Data.Migrations
+namespace datingapp.api.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class UserPasswordAdded : Migration
+    public partial class updatesuserfields : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -13,13 +13,13 @@ namespace datingapp.data.Data.Migrations
             migrationBuilder.AddColumn<byte[]>(
                 name: "PasswordHash",
                 table: "Users",
-                type: "longblob",
+                type: "bytea",
                 nullable: true);
 
             migrationBuilder.AddColumn<byte[]>(
                 name: "PasswordSalt",
                 table: "Users",
-                type: "longblob",
+                type: "bytea",
                 nullable: true);
         }
 

@@ -147,3 +147,6 @@
 /Users/macbookpro/Documents/KEZALO/ja/DatingApp/datingapp.api/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.dll
 /Users/macbookpro/Documents/KEZALO/ja/DatingApp/datingapp.api/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 /Users/macbookpro/Documents/KEZALO/ja/DatingApp/datingapp.api/bin/Debug/net9.0/UserSeedData.json
+/Users/macbookpro/Documents/KEZALO/ja/DatingApp/datingapp.api/obj/Debug/net9.0/datingapp.api.sourcelink.json
+/Users/macbookpro/Documents/KEZALO/ja/DatingApp/datingapp.api/bin/Debug/net9.0/Npgsql.dll
+/Users/macbookpro/Documents/KEZALO/ja/DatingApp/datingapp.api/bin/Debug/net9.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll

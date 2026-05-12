@@ -1,13 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace datingapp.api.DTOs
 {
-    public class LoginDto
+    public struct LoginDto
     {
-        public string? UserName { get; set; }
-        public string? Password { get; set; }
+        [Required]
+        [MinLength(2)]
+        public string Username { get; set; }
+        
+        [Required]
+        [MinLength(3)]
+        public string Password { get; set; }
     }
 }

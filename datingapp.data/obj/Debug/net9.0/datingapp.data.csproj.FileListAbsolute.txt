@@ -12,3 +12,4 @@
 /Users/macbookpro/Documents/KEZALO/ja/DatingApp/datingapp.data/obj/Debug/net9.0/datingapp.data.pdb
 /Users/macbookpro/Documents/KEZALO/ja/DatingApp/datingapp.data/obj/Debug/net9.0/datingapp.data.genruntimeconfig.cache
 /Users/macbookpro/Documents/KEZALO/ja/DatingApp/datingapp.data/obj/Debug/net9.0/ref/datingapp.data.dll
+/Users/macbookpro/Documents/KEZALO/ja/DatingApp/datingapp.data/obj/Debug/net9.0/datingapp.data.sourcelink.json

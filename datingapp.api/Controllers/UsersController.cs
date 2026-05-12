@@ -1,16 +1,17 @@
-using datingapp.data.Data;
-using datingapp.data.Entities;
-using Microsoft.AspNetCore.Authorization;
+using datingapp.api.Data;
+using datingapp.api.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace datingapp.api.Controllers
 {
-    public class UsersController : BaseApiController
+    [ApiController]
+    [Route("api/users")]
+    public class UsersController : ControllerBase
     {
-        private readonly DataContext _context;
-
-        public UsersController(DataContext context)
+        private readonly ApplicationDBContext _context;
+        
+        public UsersController(ApplicationDBContext context)
         {
             _context = context;
         }
@@ -20,22 +21,13 @@ namespace datingapp.api.Controllers
         {
             var users = await _context.Users.ToListAsync();
 
-            if (users == null) return BadRequest();
-
-            return users;
+            return Ok(users);
         }
 
-        // [HttpGet]
-        // [Route("{id:int}")]
-        // public ActionResult<AppUser> GetUser([FromRoute] int id)
-        [Authorize]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserById(int id)
+        public async Task<ActionResult<AppUser>>GetUser([FromRoute] int id)
         {
-            var user = await _context.Users.FindAsync(id);
-
-            if (user == null) return NotFound("User not found");
-            return Ok(user);
+            return await _context.Users.FindAsync(id);
         }
     }
 }

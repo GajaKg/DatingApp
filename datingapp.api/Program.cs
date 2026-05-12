@@ -1,16 +1,14 @@
-using System.Text;
-using datingapp.api.Interfaces;
-using datingapp.api.Services;
-using datingapp.data.Data;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+using datingapp.api.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using datingapp.api.Extensions;
-using datingapp.api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<ApplicationDBContext>(options =>
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    )
+);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -19,29 +17,29 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Dating Demo API", Version = "v1" });
-    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        In = ParameterLocation.Header,
-        Description = "Please enter a valid token",
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        BearerFormat = "JWT",
-        Scheme = "Bearer"
-    });
-    option.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
-                }
-            },
-            new string[]{}
-        }
-    });
+    // option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    // {
+    //     In = ParameterLocation.Header,
+    //     Description = "Please enter a valid token",
+    //     Name = "Authorization",
+    //     Type = SecuritySchemeType.Http,
+    //     BearerFormat = "JWT",
+    //     Scheme = "Bearer"
+    // });
+    // option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    // {
+    //     {
+    //         new OpenApiSecurityScheme
+    //         {
+    //             Reference = new OpenApiReference
+    //             {
+    //                 Type=ReferenceType.SecurityScheme,
+    //                 Id="Bearer"
+    //             }
+    //         },
+    //         new string[]{}
+    //     }
+    // });
 
 });
 
@@ -80,14 +78,14 @@ builder.Services.AddSwaggerGen(option =>
 //     )
 // );
 
-builder.Services.AddApplicationServices(builder.Configuration);
-builder.Services.AddIdentityServices(builder.Configuration);
+// builder.Services.AddApplicationServices(builder.Configuration);
+// builder.Services.AddIdentityServices(builder.Configuration);
 
 var app = builder.Build();
 
 
 // Configure the HTTP request pipeline.
-app.UseMiddleware<ExceptionMiddleware>();
+// app.UseMiddleware<ExceptionMiddleware>();
 
 // app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5219"));
 
@@ -107,18 +105,18 @@ app.MapControllers();
 
 
 // Database SEED
-using var scope = app.Services.CreateScope();
-var services = scope.ServiceProvider;
-try
-{
-    var context = services.GetRequiredService<DataContext>();
-    await context.Database.MigrateAsync(); // ukoliko nema baze kreirace novu sa sve tabelama
-    await Seed.SeedUsers(context);
-}
-catch (Exception ex)
-{
-    var logger = services.GetService<ILogger<Program>>();
-    logger?.LogError(ex, "An error occurred druing migration.");
-}
+// using var scope = app.Services.CreateScope();
+// var services = scope.ServiceProvider;
+// try
+// {
+//     var context = services.GetRequiredService<DataContext>();
+//     await context.Database.MigrateAsync(); // ukoliko nema baze kreirace novu sa sve tabelama
+//     await Seed.SeedUsers(context);
+// }
+// catch (Exception ex)
+// {
+//     var logger = services.GetService<ILogger<Program>>();
+//     logger?.LogError(ex, "An error occurred druing migration.");
+// }
 
 app.Run();
