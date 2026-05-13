@@ -1,9 +1,9 @@
-using System.Formats.Tar;
 using System.Security.Cryptography;
 using System.Text;
 using datingapp.api.Data;
 using datingapp.api.DTOs;
 using datingapp.api.Entities;
+using datingapp.api.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,21 +13,23 @@ namespace datingapp.api.Controllers
     [Route("api/[controller]")]
     public class AccountsController : ControllerBase
     {
+        private readonly ITokenService _tokenService;
         private readonly ApplicationDBContext _context;
 
-        public AccountsController(ApplicationDBContext context)
+        public AccountsController(ApplicationDBContext context, ITokenService tokenService)
         {
+            _tokenService = tokenService;
             _context = context;
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<AppUser>> Login(LoginDto loginDto)
+        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             var user = await _context.Users.SingleOrDefaultAsync(u => u.UserName == loginDto.Username);
 
             if (user == null) return Unauthorized();
 
-            using var hmac = new HMACSHA512();
+            using var hmac = new HMACSHA512(user.PasswordSalt);
             var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
 
             for (int i = 0; i < computedHash.Length; i++)
@@ -35,11 +37,15 @@ namespace datingapp.api.Controllers
                 if (computedHash[i] != user.PasswordHash[i]) return Unauthorized("Invalid passsword");
             }
 
-            return user;
+            return new UserDto
+            {
+                Username = user.UserName,
+                Token = _tokenService.CreateToken(user)
+            };
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<AppUser>?> Register([FromBody] RegisterDto registerDto)
+        public async Task<ActionResult<UserDto>?> Register([FromBody] RegisterDto registerDto)
         {
 
             // var isExist = await _context.Users.AnyAsync(x => x.UserName.Equals(registerDto.Username, StringComparison.CurrentCultureIgnoreCase));
@@ -58,7 +64,11 @@ namespace datingapp.api.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return user;
+            return new UserDto
+            {
+                Username = user.UserName,
+                Token = _tokenService.CreateToken(user)
+            };
         }
     }
 }

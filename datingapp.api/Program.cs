@@ -1,5 +1,10 @@
+using System.Text;
 using datingapp.api.Data;
+using datingapp.api.Interfaces;
+using datingapp.api.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,23 +47,23 @@ builder.Services.AddSwaggerGen(option =>
     // });
 
 });
-
+builder.Services.AddScoped<ITokenService, TokenService>();
 /************************ Moved to extensions *******************/
-// // builder.Services.AddScoped<ITokenService, TokenService>(); // AddSingleton() best for cashing
-// builder.Services
-//     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//     .AddJwtBearer(options =>
-//     {
-//         options.TokenValidationParameters = new TokenValidationParameters
-//         {
-//             ValidateIssuerSigningKey = true, // essential
-//             IssuerSigningKey = new SymmetricSecurityKey(
-//                 Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"]!)
-//             ),
-//             ValidateIssuer = false,
-//             ValidateAudience = false,
-//         };
-//     });
+// builder.Services.AddScoped<ITokenService, TokenService>(); // AddSingleton() best for cashing
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true, // essential
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"]!)
+            ),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+        };
+    });
 
 
 
