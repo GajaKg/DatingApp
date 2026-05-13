@@ -29,6 +29,7 @@ namespace datingapp.api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<AppUser>>GetUser([FromRoute] int id)
         {
+            // var newId = id + 222;
             return await _context.Users.FindAsync(id);
         }
     }

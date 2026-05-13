@@ -1,4 +1,5 @@
 using datingapp.api.Extensions;
+using datingapp.api.Middleware;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -81,12 +82,12 @@ builder.Services.AddIdentityService(builder.Configuration);
 // builder.Services.AddIdentityServices(builder.Configuration);
 
 var app = builder.Build();
-
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 // app.UseMiddleware<ExceptionMiddleware>();
 
-// app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5219"));
+app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5173"));
 
 if (app.Environment.IsDevelopment())
 {
