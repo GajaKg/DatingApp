@@ -1,20 +1,13 @@
-using System.Text;
-using datingapp.api.Data;
-using datingapp.api.Interfaces;
-using datingapp.api.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using datingapp.api.Extensions;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddDbContext<ApplicationDBContext>(options =>
-    options.UseNpgsql(
-        builder.Configuration.GetConnectionString("DefaultConnection")
-    )
-);
-
+builder.Services.AddApplicationServices(builder.Configuration);
+// builder.Services.AddDbContext<ApplicationDBContext>(options =>
+//     options.UseNpgsql(
+//         builder.Configuration.GetConnectionString("DefaultConnection")
+//     )
+// );
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -47,23 +40,24 @@ builder.Services.AddSwaggerGen(option =>
     // });
 
 });
-builder.Services.AddScoped<ITokenService, TokenService>();
+// builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddIdentityService(builder.Configuration);
 /************************ Moved to extensions *******************/
 // builder.Services.AddScoped<ITokenService, TokenService>(); // AddSingleton() best for cashing
-builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true, // essential
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"]!)
-            ),
-            ValidateIssuer = false,
-            ValidateAudience = false,
-        };
-    });
+// builder.Services
+//     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//     .AddJwtBearer(options =>
+//     {
+//         options.TokenValidationParameters = new TokenValidationParameters
+//         {
+//             ValidateIssuerSigningKey = true, // essential
+//             IssuerSigningKey = new SymmetricSecurityKey(
+//                 Encoding.UTF8.GetBytes(builder.Configuration["TokenKey"]!)
+//             ),
+//             ValidateIssuer = false,
+//             ValidateAudience = false,
+//         };
+//     });
 
 
 

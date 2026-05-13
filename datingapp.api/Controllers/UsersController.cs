@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace datingapp.api.Controllers
 {
-    [Authorize]
+    // [Authorize]
     [ApiController]
     [Route("api/users")]
     public class UsersController : ControllerBase
